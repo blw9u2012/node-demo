@@ -57,6 +57,11 @@ var exports = module.exports = function(passedInIo) {
 
       if (poll) {
 
+      	// Add logic here to restrict the number of votes
+
+
+
+      	
           poll.answers[data.answerIndex].voteCount++;
 
           io.sockets.emit('poll updated', poll);

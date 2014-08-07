@@ -10,6 +10,32 @@ app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
+var voters = new Array();
+
+// Establish some authentication..
+app.use(function(req, res, next){
+	if(req.method == "PUT"){
+		console.log("PUT request recieved from " + req.connection.remoteAddress);
+		
+		if(voters[req.connection.remoteAddress] != null){
+			if(voters[req.connection.remoteAddress].count == 1){
+				res.end("You already voted");
+				console.log("Voter already voted");
+				return;
+			}
+			console.log(voters[req.connection.remoteAddress]);
+		}
+		else{
+			voters[req.connection.remoteAddress] = {
+				"ip": req.connection.remoteAddress,
+				"count": 1
+			};
+			console.log("Voter with ip address: " + req.connection.remoteAddress + " created");
+		}
+	}
+	next();
+});
+
 app.get('/poll/:id', function(req, res) {
 	res.sendfile(__dirname + '/public/poll.html');
 });
